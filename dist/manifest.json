@@ -1,0 +1,13 @@
+{
+    "manifest_version": 3,
+    "name": "YouTube Playback Rate Controller",
+    "version": "1.0",
+    "description": "Control YouTube playback speed using keyboard shortcuts.",
+    "permissions": ["activeTab"],
+    "content_scripts": [
+        {
+            "matches": ["*://www.youtube.com/*"],
+            "js": ["index.js"]
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "name": "yt-speed",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "start": "node dist/index.js",
+        "ts-watch": "tsc --watch"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "devDependencies": {
+        "typescript": "^5.5.3"
+    }
+}
