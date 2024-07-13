@@ -5,32 +5,38 @@ const HIJACKED_KEYS = [",", ".", ")"];
 
 const youtubeVideoElement = document.querySelector("video");
 
+const speedText = document.createElement("div");
+speedText.style.setProperty("position", "absolute");
+speedText.style.setProperty("top", "50%");
+speedText.style.setProperty("left", "50%");
+speedText.style.setProperty("transform", "translate(-50%, -50%)");
+speedText.style.setProperty("background", "black");
+speedText.style.setProperty("color", "white");
+speedText.style.setProperty("font-weight", "bold");
+speedText.style.setProperty("text-align", "center");
+speedText.style.setProperty("width", "150px");
+speedText.style.setProperty("height", "150px");
+speedText.style.setProperty("opacity", "0.75");
+speedText.style.setProperty("border-radius", "10px");
+speedText.style.setProperty("font-size", "3rem");
+speedText.style.setProperty("display", "flex");
+speedText.style.setProperty("justify-content", "center");
+speedText.style.setProperty("align-items", "center");
+
+let speedTextTimeout: number | null = null;
+
 const showFinalPlaybackRateOnScreen = (playbackRate: number) => {
-    const div = document.createElement("div");
+    speedText.innerText = `${playbackRate.toFixed(2)}x`;
 
-    div.style.setProperty("position", "absolute");
-    div.style.setProperty("top", "50%");
-    div.style.setProperty("left", "50%");
-    div.style.setProperty("transform", "translate(-50%, -50%)");
-    div.style.setProperty("background", "black");
-    div.style.setProperty("color", "white");
-    div.style.setProperty("font-weight", "bold");
-    div.style.setProperty("text-align", "center");
-    div.style.setProperty("width", "150px");
-    div.style.setProperty("height", "150px");
-    div.style.setProperty("opacity", "0.75");
-    div.style.setProperty("border-radius", "10px");
-    div.style.setProperty("font-size", "3rem");
-    div.style.setProperty("display", "flex");
-    div.style.setProperty("justify-content", "center");
-    div.style.setProperty("align-items", "center");
+    if (speedTextTimeout !== null) {
+        window.clearTimeout(speedTextTimeout);
+    } else {
+        document.body.appendChild(speedText);
+    }
 
-    div.innerText = `${playbackRate.toFixed(2)}x`;
-
-    document.body.appendChild(div);
-
-    setTimeout(() => {
-        document.body.removeChild(div);
+    speedTextTimeout = window.setTimeout(() => {
+        document.body.removeChild(speedText);
+        speedTextTimeout = null;
     }, 750);
 };
 
@@ -51,11 +57,9 @@ const listener = (e: KeyboardEvent) => {
 
     const currentPlaybackRate = youtubeVideoElement.playbackRate;
 
-    if (currentPlaybackRate >= MAX_PLAYBACK_RATE || currentPlaybackRate < MIN_PLAYBACK_RATE) return;
-
-    if (e.key === ".") {
+    if (e.key === "." && currentPlaybackRate + PLAYBACK_UPDATE_STEP <= MAX_PLAYBACK_RATE) {
         youtubeVideoElement.playbackRate = currentPlaybackRate + PLAYBACK_UPDATE_STEP;
-    } else if (e.key === ",") {
+    } else if (e.key === "," && currentPlaybackRate - PLAYBACK_UPDATE_STEP <= MIN_PLAYBACK_RATE) {
         youtubeVideoElement.playbackRate = currentPlaybackRate - PLAYBACK_UPDATE_STEP;
     }
 
