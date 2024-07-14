@@ -1,3 +1,13 @@
+const DEBUG = false;
+
+const log = (t: "info" | "warn" | "error", ...args: any[]) => {
+    if (DEBUG) {
+        console[t](...args);
+    }
+};
+
+log("info", "YT-SPEED LOADED");
+
 const DEC_SPEED_CHAR = "[";
 const INC_SPEED_CHAR = "]";
 const RESET_SPEED_CHAR = ")";
@@ -7,7 +17,7 @@ const MIN_PLAYBACK_RATE = 0.1;
 const PLAYBACK_UPDATE_STEP = 0.1;
 const HIJACKED_KEYS = [INC_SPEED_CHAR, DEC_SPEED_CHAR, RESET_SPEED_CHAR];
 
-const youtubeVideoElement = document.querySelector("video");
+let youtubeVideoElement = document.querySelector("video");
 
 const speedText = document.createElement("div");
 speedText.style.setProperty("position", "absolute");
@@ -45,15 +55,23 @@ const showFinalPlaybackRateOnScreen = (playbackRate: number) => {
 };
 
 const listener = (e: KeyboardEvent) => {
-    if (!HIJACKED_KEYS.includes(e.key)) return;
+    if (!HIJACKED_KEYS.includes(e.key)) {
+        return;
+    }
 
-    if (!youtubeVideoElement) return;
+    log("info", "Pressed:", e.key);
+
+    if (!youtubeVideoElement) {
+        log("warn", "YouTube video element not found");
+        return;
+    }
 
     e.stopPropagation();
     e.stopImmediatePropagation();
     e.preventDefault();
 
     if (e.key === RESET_SPEED_CHAR) {
+        log("info", "Setting playbackRate to: 1");
         youtubeVideoElement.playbackRate = 1;
         showFinalPlaybackRateOnScreen(youtubeVideoElement.playbackRate);
         return;
@@ -67,7 +85,16 @@ const listener = (e: KeyboardEvent) => {
         youtubeVideoElement.playbackRate = currentPlaybackRate - PLAYBACK_UPDATE_STEP;
     }
 
+    log("info", "Setting playbackRate to:", currentPlaybackRate);
+
     showFinalPlaybackRateOnScreen(youtubeVideoElement.playbackRate);
 };
 
 document.addEventListener("keydown", listener);
+
+// couldn't be bothered to check for url changes
+window.setInterval(() => {
+    if (!(youtubeVideoElement instanceof HTMLVideoElement)) {
+        youtubeVideoElement = document.querySelector("video");
+    }
+}, 2500);
