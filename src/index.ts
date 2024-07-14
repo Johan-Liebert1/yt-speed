@@ -1,7 +1,11 @@
+const DEC_SPEED_CHAR = "[";
+const INC_SPEED_CHAR = "]";
+const RESET_SPEED_CHAR = ")";
+
 const MAX_PLAYBACK_RATE = 5;
 const MIN_PLAYBACK_RATE = 0.1;
 const PLAYBACK_UPDATE_STEP = 0.1;
-const HIJACKED_KEYS = [",", ".", ")"];
+const HIJACKED_KEYS = [INC_SPEED_CHAR, DEC_SPEED_CHAR, RESET_SPEED_CHAR];
 
 const youtubeVideoElement = document.querySelector("video");
 
@@ -49,7 +53,7 @@ const listener = (e: KeyboardEvent) => {
     e.stopImmediatePropagation();
     e.preventDefault();
 
-    if (e.key === ")" && e.shiftKey) {
+    if (e.key === RESET_SPEED_CHAR) {
         youtubeVideoElement.playbackRate = 1;
         showFinalPlaybackRateOnScreen(youtubeVideoElement.playbackRate);
         return;
@@ -57,9 +61,9 @@ const listener = (e: KeyboardEvent) => {
 
     const currentPlaybackRate = youtubeVideoElement.playbackRate;
 
-    if (e.key === "." && currentPlaybackRate + PLAYBACK_UPDATE_STEP <= MAX_PLAYBACK_RATE) {
+    if (e.key === INC_SPEED_CHAR && currentPlaybackRate + PLAYBACK_UPDATE_STEP <= MAX_PLAYBACK_RATE) {
         youtubeVideoElement.playbackRate = currentPlaybackRate + PLAYBACK_UPDATE_STEP;
-    } else if (e.key === "," && currentPlaybackRate - PLAYBACK_UPDATE_STEP <= MIN_PLAYBACK_RATE) {
+    } else if (e.key === DEC_SPEED_CHAR && currentPlaybackRate - PLAYBACK_UPDATE_STEP <= MIN_PLAYBACK_RATE) {
         youtubeVideoElement.playbackRate = currentPlaybackRate - PLAYBACK_UPDATE_STEP;
     }
 
