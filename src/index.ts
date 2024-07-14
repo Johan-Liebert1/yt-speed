@@ -63,7 +63,7 @@ const listener = (e: KeyboardEvent) => {
 
     if (e.key === INC_SPEED_CHAR && currentPlaybackRate + PLAYBACK_UPDATE_STEP <= MAX_PLAYBACK_RATE) {
         youtubeVideoElement.playbackRate = currentPlaybackRate + PLAYBACK_UPDATE_STEP;
-    } else if (e.key === DEC_SPEED_CHAR && currentPlaybackRate - PLAYBACK_UPDATE_STEP <= MIN_PLAYBACK_RATE) {
+    } else if (e.key === DEC_SPEED_CHAR && currentPlaybackRate - PLAYBACK_UPDATE_STEP >= MIN_PLAYBACK_RATE) {
         youtubeVideoElement.playbackRate = currentPlaybackRate - PLAYBACK_UPDATE_STEP;
     }
 
