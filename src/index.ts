@@ -1,9 +1,11 @@
 const DEBUG = false;
 
 const log = (t: "info" | "warn" | "error", ...args: any[]) => {
-    if (DEBUG) {
-        console[t](...args);
+    if (DEBUG && t === "info") {
+        return;
     }
+
+    console[t]("[YT-SPEED]", ...args);
 };
 
 log("info", "YT-SPEED LOADED");
@@ -55,6 +57,10 @@ const showFinalPlaybackRateOnScreen = (playbackRate: number) => {
 };
 
 const listener = (e: KeyboardEvent) => {
+    if (!(youtubeVideoElement instanceof HTMLVideoElement)) {
+        youtubeVideoElement = document.querySelector("video");
+    }
+
     if (!HIJACKED_KEYS.includes(e.key)) {
         return;
     }
@@ -91,10 +97,3 @@ const listener = (e: KeyboardEvent) => {
 };
 
 document.addEventListener("keydown", listener);
-
-// couldn't be bothered to check for url changes
-window.setInterval(() => {
-    if (!(youtubeVideoElement instanceof HTMLVideoElement)) {
-        youtubeVideoElement = document.querySelector("video");
-    }
-}, 2500);
