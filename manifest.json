@@ -4,6 +4,9 @@
     "version": "1.0",
     "description": "Control YouTube playback speed using keyboard shortcuts.",
     "permissions": ["activeTab"],
+    "action": {
+        "default_popup": "index.html"
+    },
     "content_scripts": [
         {
             "matches": ["*://www.youtube.com/*"],
