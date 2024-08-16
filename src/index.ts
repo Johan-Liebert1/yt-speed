@@ -3,7 +3,7 @@ const DEBUG = true;
 
 let initializedFromLS = false;
 
-const log = (t: "info"|"warn"|"error", ...args: any[]) => {
+const log = (t: "info" | "warn" | "error", ...args: any[]) => {
     if (!DEBUG && t === "info") {
         return;
     }
@@ -22,9 +22,7 @@ const RESET_SPEED_CHAR = ")";
 const MAX_PLAYBACK_RATE = 5;
 const MIN_PLAYBACK_RATE = 0.1;
 const PLAYBACK_UPDATE_STEP = 0.1;
-const HIJACKED_KEYS = [ INC_SPEED_CHAR, DEC_SPEED_CHAR, RESET_SPEED_CHAR ];
-
-let youtubeVideoElement = document.querySelector("video");
+const HIJACKED_KEYS = [INC_SPEED_CHAR, DEC_SPEED_CHAR, RESET_SPEED_CHAR];
 
 const speedText = document.createElement("div");
 speedText.style.setProperty("position", "absolute");
@@ -44,7 +42,7 @@ speedText.style.setProperty("display", "flex");
 speedText.style.setProperty("justify-content", "center");
 speedText.style.setProperty("align-items", "center");
 
-let speedTextTimeout: number|null = null;
+let speedTextTimeout: number | null = null;
 
 const showFinalPlaybackRateOnScreen = (playbackRate: number) => {
     speedText.innerText = `${playbackRate.toFixed(2)}x`;
@@ -62,9 +60,7 @@ const showFinalPlaybackRateOnScreen = (playbackRate: number) => {
 };
 
 const listener = (e: KeyboardEvent) => {
-    if (!(youtubeVideoElement instanceof HTMLVideoElement)) {
-        youtubeVideoElement = document.querySelector("video");
-    }
+    const youtubeVideoElement = document.querySelector("video");
 
     if (!HIJACKED_KEYS.includes(e.key)) {
         return;
@@ -104,8 +100,7 @@ const listener = (e: KeyboardEvent) => {
 const hoverDivStyles = (reset: boolean) => (e: MouseEvent) => {
     const div = e.target as HTMLDivElement | null;
 
-    if (!div)
-        return;
+    if (!div) return;
 
     if (!reset) {
         div.style.background = "var(--yt-spec-badge-chip-background)";
@@ -115,19 +110,16 @@ const hoverDivStyles = (reset: boolean) => (e: MouseEvent) => {
 };
 
 const appendTheChild = (playlistUrl: string, playlistName: string, addToLs = true): Success => {
-    log("info", "appendTheChild", {playlistUrl, playlistName, addToLs});
+    log("info", "appendTheChild", { playlistUrl, playlistName, addToLs });
 
     const playlistTab = document.querySelector<HTMLDivElement>("#section-items");
-    if (!playlistTab)
-        return false;
+    if (!playlistTab) return false;
 
     const child = playlistTab?.childNodes[0] as HTMLDivElement;
-    if (!child)
-        return false;
+    if (!child) return false;
 
     const childAnchor = child.querySelector("a");
-    if (!childAnchor)
-        return false;
+    if (!childAnchor) return false;
 
     const newChildDiv = document.createElement("div");
     newChildDiv.classList.add(...child.classList);
@@ -139,7 +131,7 @@ const appendTheChild = (playlistUrl: string, playlistName: string, addToLs = tru
         newChildDiv.style.setProperty(key, value);
     }
 
-    const borderRadius = '10px';
+    const borderRadius = "10px";
 
     newChildDiv.style.borderRadius = borderRadius;
     newChildDiv.style.fontSize = "1.3rem";
@@ -164,10 +156,10 @@ const appendTheChild = (playlistUrl: string, playlistName: string, addToLs = tru
         const myPlaylists = window.localStorage.getItem(LS_NAME);
 
         if (!myPlaylists) {
-            window.localStorage.setItem(LS_NAME, JSON.stringify([ {playlistUrl, playlistName} ]));
+            window.localStorage.setItem(LS_NAME, JSON.stringify([{ playlistUrl, playlistName }]));
         } else {
             const old = JSON.parse(myPlaylists);
-            window.localStorage.setItem(LS_NAME, JSON.stringify([...old, {playlistUrl, playlistName} ]));
+            window.localStorage.setItem(LS_NAME, JSON.stringify([...old, { playlistUrl, playlistName }]));
         }
     }
 
@@ -180,17 +172,15 @@ const appendTheChild = (playlistUrl: string, playlistName: string, addToLs = tru
 const addPlaylistFromLS = (): Success => {
     const myPlaylistsFromLS = window.localStorage.getItem(LS_NAME);
 
-    log("info", "DOMContentLoaded", {myPlaylistsFromLS});
+    log("info", "DOMContentLoaded", { myPlaylistsFromLS });
 
-    if (!myPlaylistsFromLS)
-        return false;
+    if (!myPlaylistsFromLS) return false;
 
     const myPlaylists = JSON.parse(myPlaylistsFromLS) as Playlist[];
 
-    if (!myPlaylists)
-        return true;
+    if (!myPlaylists) return true;
 
-    for (const {playlistUrl, playlistName} of myPlaylists) {
+    for (const { playlistUrl, playlistName } of myPlaylists) {
         if (!appendTheChild(playlistUrl, playlistName, false)) {
             return false;
         }
@@ -205,7 +195,7 @@ document.addEventListener("keydown", listener);
 // document.addEventListener("load", addPlaylistFromLS);
 
 // @ts-ignore
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     log("info", "Received request", request);
 
     if (request.action === "addPlaylist") {
