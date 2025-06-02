@@ -17,12 +17,13 @@ type Success = boolean;
 
 const DEC_SPEED_CHAR = "[";
 const INC_SPEED_CHAR = "]";
-const RESET_SPEED_CHAR = ")";
+const RESET_SPEED_CHAR = "=";
 
 const MAX_PLAYBACK_RATE = 5;
 const MIN_PLAYBACK_RATE = 0.1;
 const PLAYBACK_UPDATE_STEP = 0.1;
-const HIJACKED_KEYS = [INC_SPEED_CHAR, DEC_SPEED_CHAR, RESET_SPEED_CHAR];
+const NUMBERS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+const HIJACKED_KEYS = [INC_SPEED_CHAR, DEC_SPEED_CHAR, RESET_SPEED_CHAR, ...NUMBERS];
 
 const speedText = document.createElement("div");
 speedText.style.setProperty("position", "absolute");
@@ -80,6 +81,14 @@ const listener = (e: KeyboardEvent) => {
     if (e.key === RESET_SPEED_CHAR) {
         log("info", "Setting playbackRate to: 1");
         youtubeVideoElement.playbackRate = 1;
+        showFinalPlaybackRateOnScreen(youtubeVideoElement.playbackRate);
+        return;
+    }
+
+    if (NUMBERS.includes(e.key)) {
+        let num = Number.parseInt(e.key);
+        let newRate = Math.max(1, Math.min(2, num));
+        youtubeVideoElement.playbackRate = newRate;
         showFinalPlaybackRateOnScreen(youtubeVideoElement.playbackRate);
         return;
     }
@@ -189,7 +198,7 @@ const addPlaylistFromLS = (): Success => {
     return true;
 };
 
-document.addEventListener("keydown", listener);
+document.addEventListener("keydown", listener, { capture: true, passive: false });
 
 // This refuses to work for some reason
 // document.addEventListener("load", addPlaylistFromLS);
