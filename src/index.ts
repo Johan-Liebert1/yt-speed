@@ -22,7 +22,7 @@ const RESET_SPEED_CHAR = "=";
 const MAX_PLAYBACK_RATE = 5;
 const MIN_PLAYBACK_RATE = 0.1;
 const PLAYBACK_UPDATE_STEP = 0.1;
-const NUMBERS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+const NUMBERS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 const HIJACKED_KEYS = [INC_SPEED_CHAR, DEC_SPEED_CHAR, RESET_SPEED_CHAR, ...NUMBERS];
 
 const speedText = document.createElement("div");
