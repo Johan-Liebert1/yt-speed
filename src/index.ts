@@ -26,6 +26,8 @@ const NUMBERS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 const HIJACKED_KEYS = [INC_SPEED_CHAR, DEC_SPEED_CHAR, RESET_SPEED_CHAR, ...NUMBERS];
 
 const speedText = document.createElement("div");
+speedText.setAttribute("id", "speed-text");
+speedText.style.setProperty("z-index", "9999");
 speedText.style.setProperty("position", "absolute");
 speedText.style.setProperty("top", "50%");
 speedText.style.setProperty("left", "50%");
@@ -46,6 +48,8 @@ speedText.style.setProperty("align-items", "center");
 let speedTextTimeout: number | null = null;
 
 const showFinalPlaybackRateOnScreen = (playbackRate: number) => {
+    log("info", "showFinalPlaybackRateOnScreen", speedText);
+
     speedText.innerText = `${playbackRate.toFixed(2)}x`;
 
     if (speedTextTimeout !== null) {
@@ -216,6 +220,11 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 
 const addFromPlaylistInterval = setInterval(() => {
+    if (!window.location.href.includes("youtube")) {
+        window.clearInterval(addFromPlaylistInterval);
+        return;
+    }
+
     if (initializedFromLS) {
         window.clearInterval(addFromPlaylistInterval);
         return;
