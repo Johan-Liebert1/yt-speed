@@ -125,9 +125,22 @@ const hoverDivStyles = (reset: boolean) => (e: MouseEvent) => {
 };
 
 const appendTheChild = (playlistUrl: string, playlistName: string, addToLs = true): Success => {
-    log("info", "appendTheChild", { playlistUrl, playlistName, addToLs });
+    // style-scope ytd-guide-renderer
+    const playlistTabs = document.querySelectorAll<HTMLDivElement>(
+        "#section-items.style-scope.ytd-guide-collapsible-section-entry-renderer",
+    );
 
-    const playlistTab = document.querySelector<HTMLDivElement>("#section-items");
+    if (!playlistTabs || playlistTabs.length === 0) return false;
+
+    let playlistTab = null;
+
+    // Find the thing that has "Playlists"
+    for (const child of playlistTabs) {
+        if (child.textContent?.includes("Playlists")) {
+            playlistTab = child;
+        }
+    }
+
     if (!playlistTab) return false;
 
     const child = playlistTab?.childNodes[0] as HTMLDivElement;
@@ -187,7 +200,7 @@ const appendTheChild = (playlistUrl: string, playlistName: string, addToLs = tru
 const addPlaylistFromLS = (): Success => {
     const myPlaylistsFromLS = window.localStorage.getItem(LS_NAME);
 
-    log("info", "DOMContentLoaded", { myPlaylistsFromLS });
+    // log("info", "DOMContentLoaded", { myPlaylistsFromLS });
 
     if (!myPlaylistsFromLS) return false;
 
@@ -222,6 +235,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 
 const addFromPlaylistInterval = setInterval(() => {
+    console.log("interval runs");
+
     if (!window.location.href.includes("youtube")) {
         window.clearInterval(addFromPlaylistInterval);
         return;
