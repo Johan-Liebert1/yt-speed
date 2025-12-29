@@ -65,13 +65,15 @@ const showFinalPlaybackRateOnScreen = (playbackRate: number) => {
 };
 
 const listener = (e: KeyboardEvent) => {
+    if (e.target instanceof HTMLInputElement) {
+        return;
+    }
+
     const youtubeVideoElement = document.querySelector("video");
 
     if (!HIJACKED_KEYS.includes(e.key)) {
         return;
     }
-
-    log("info", "Pressed:", e.key);
 
     if (!youtubeVideoElement) {
         log("warn", "YouTube video element not found");
